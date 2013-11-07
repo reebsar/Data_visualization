@@ -1,0 +1,112 @@
+
+PFont smallFont, bigFont ;
+
+Table cancerData;
+
+float keyX;
+float keyY;
+
+
+void setup () {
+  size (600, 600);
+
+  cancerData = loadTable("CancerRate.csv");  
+  smallFont = loadFont("Avenir-Light-12.vlw");
+  bigFont = loadFont("Avenir-Black-30.vlw");
+  rectMode(CORNER);
+}
+
+void draw() {
+  background(150);
+ Title();
+
+
+
+  String [] cancerName = {
+    "Digestive", "Respiratory", "Melanoma", "Male Genital", "Brain", "Endocrine", "Lymphoma", "Leukemia"
+  };
+
+  //build boxes on the side 
+
+  float keyX = width-50;
+  float keyY = height/(cancerName.length);
+
+  for (int y=1; y<cancerName.length; y++) {
+    fill(0);
+    ellipseMode(CENTER);
+    ellipse(keyX, y*keyY-50, 25, 25);
+    textAlign(CENTER);
+    fill(255);
+    text(cancerName[y], keyX, y*keyY-45);
+
+    int columnCount = cancerData.getColumnCount();  
+    //for (int bar=1; bar<columnCount; bar++) { ....can I make the below if statements a for loop?
+    if ((mouseX>keyX) && (mouseY<keyY)) {
+      bargraph(1);
+    }
+
+    if ((mouseX>keyX-50) && (mouseY>keyY) && (mouseY<(2*keyY))) {
+      bargraph(2);
+    }
+
+    if ((mouseX>keyX-50) && (mouseY>(2*keyY)) && (mouseY<(3*keyY))) {
+      bargraph(3);
+    }
+
+    if ((mouseX>keyX-50) && (mouseY>(3*keyY)) && (mouseY<(4*keyY))) {
+      bargraph(4);
+    }
+
+    if ((mouseX>keyX-50) && (mouseY>(4*keyY)) && (mouseY<(5*keyY))) {
+      bargraph(5);
+    }
+
+    if ((mouseX>keyX-50) && (mouseY>(5*keyY)) && (mouseY<(6*keyY))) {
+      bargraph(6);
+    
+    }
+    if ((mouseX>keyX-50) && (mouseY>(6*keyY)) && (mouseY<(7*keyY))) {
+      bargraph(7);
+    }
+    
+    else{
+      text("Scroll over Cancer Types", width/2, height/2);}
+    
+    println(mouseY);
+    println("keyY is: " + keyY);
+   
+  }
+}
+
+void bargraph (int type) {
+  fill(0); 
+  int rowCount = cancerData.getRowCount();
+  int bb=80;
+
+  //  int columnCount = cancerData.getColumnCount();
+  for (int row = 0; row < rowCount; row++) {
+    //    for (int column = 1; column < 2; column++) {
+    //      String ethnicity = cancerData.getString(row, column);
+    float ethnicityCancer = cancerData.getFloat(row, type);
+    float x = map(row, 0, 6, 25, 550);
+    float y = height - bb - ethnicityCancer;
+
+    rect(x, y, 20, ethnicityCancer);
+    String [] ethnicity = {
+      "White", "Black", "Asian", "American-Indian", "Hispanic"
+    };
+    textAlign(CENTER);
+    text(ethnicity[row], x+10, y+ethnicityCancer+(bb/2));
+    println("row count:" + rowCount);
+    println("ethnicityCancer is" + ethnicityCancer);
+
+  }
+}
+
+void Title(){
+  stroke(255);
+  textAlign(LEFT);
+    textFont(bigFont);
+    text("Cancer Types by Ethnicity (CDC)",25, 100);
+    textFont(smallFont);
+    text("Rates are per 100,000", 25,150);}
